@@ -23,7 +23,16 @@ set(UI_FILES
 )
 
 set(CORE_FILES
-
+    core/ISensor.h
+    core/SensorBase.h
+    core/SensorBase.cpp
+    core/TemperatureSensor.cpp
+    core/TemperatureSensor.h
+    core/HumiditySensor.cpp
+    core/HumiditySensor.h
+    core/SensorManager.cpp
+    core/SensorManager.h
+    core/Measurement.h
 )
 
 set(PROJECT_SOURCES
