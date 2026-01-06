@@ -51,6 +51,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         core/HumiditySensor.h core/HumiditySensor.cpp
         core/Measurement.h
         core/SensorManager.h core/SensorManager.cpp
+        core/AcquisitionController.h core/AcquisitionController.cpp
     )
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET test_embarque APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR
