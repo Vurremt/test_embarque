@@ -1,24 +1,37 @@
 #include "AcquisitionController.h"
 
-AcquisitionController::AcquisitionController(QObject *parent)
-    : QObject{parent}, m_db("data.db")
+AcquisitionController::AcquisitionController(QObject* parent) :
+    QObject(parent),
+    m_db("data.db"),
+    m_sync("https://httpbin.org/post", "MY_API_KEY")
 {
     m_db.open();
     m_db.init();
 
-    QObject::connect(&m_timer, &QTimer::timeout, this, &AcquisitionController::onTimeout);
+    connect(&m_timer, &QTimer::timeout,
+            this, &AcquisitionController::onTimeout);
+
+    connect(&m_syncTimer, &QTimer::timeout,
+            this, &AcquisitionController::onSyncTimeout);
+
+    connect(&m_sync, &NetworkSyncManager::syncFinished,
+            this, &AcquisitionController::syncStatusChanged);
 }
 
 void AcquisitionController::addSensor(std::unique_ptr<ISensor> sensor){
     m_manager.addSensor(std::move(sensor));
 }
 
-void AcquisitionController::start(){
+void AcquisitionController::start()
+{
     m_timer.start(m_intervalMs);
+    m_syncTimer.start(m_syncIntervalSec * 1000);
 }
 
-void AcquisitionController::stop(){
+void AcquisitionController::stop()
+{
     m_timer.stop();
+    m_syncTimer.stop();
 }
 
 void AcquisitionController::setInterval(int ms){
@@ -39,4 +52,15 @@ void AcquisitionController::onTimeout(){
     }
 
     emit measurementsReady(measurements);
+}
+
+void AcquisitionController::onSyncTimeout()
+{
+    auto last = m_db.getLastMeasurements(20);
+    m_sync.syncMeasurements(last);
+}
+
+void AcquisitionController::manualSync(const std::vector<Measurement>& measurements)
+{
+    m_sync.syncMeasurements(measurements);
 }

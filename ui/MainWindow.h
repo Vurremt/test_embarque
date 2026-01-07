@@ -16,6 +16,7 @@ public:
     MainWindow(AcquisitionController* controller, QWidget *parent = nullptr);
     ~MainWindow() = default;
 
+private:
     void setupUi();
     void updateLiveValues(const std::vector<Measurement>& m);
     void refreshHistory();
@@ -24,6 +25,7 @@ private slots:
     void onMeasurements(const std::vector<Measurement>& m);
     void onStartStop();
     void onSyncNow();
+    void onSyncStatus(bool ok, const QString& message);
 
 private:
     AcquisitionController* m_controller;

@@ -8,8 +8,9 @@ MainWindow::MainWindow(AcquisitionController* controller, QWidget* parent)
 {
     setupUi();
 
-    connect(m_controller, &AcquisitionController::measurementsReady,
-            this, &MainWindow::onMeasurements);
+    connect(m_controller, &AcquisitionController::measurementsReady, this, &MainWindow::onMeasurements);
+
+    connect(m_controller, &AcquisitionController::syncStatusChanged, this, &MainWindow::onSyncStatus);
 }
 
 void MainWindow::setupUi()
@@ -115,8 +116,16 @@ void MainWindow::onStartStop()
     m_running = !m_running;
 }
 
-void MainWindow::onSyncNow()
-{
-    //TODO
+void MainWindow::onSyncNow() {
     m_statusLabel->setText("Sync requested...");
+
+    auto last = m_controller->getLastMeasurements(20);
+    m_controller->manualSync(last);
+}
+
+void MainWindow::onSyncStatus(bool ok, const QString& message) {
+    if (ok)
+        m_statusLabel->setText("Sync OK");
+    else
+        m_statusLabel->setText("Sync ERROR: " + message);
 }
