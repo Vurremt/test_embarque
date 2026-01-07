@@ -19,7 +19,6 @@ set(APP_FILES
 set(UI_FILES
     ui/mainwindow.cpp
     ui/mainwindow.h
-    ui/mainwindow.ui
 )
 
 set(CORE_FILES

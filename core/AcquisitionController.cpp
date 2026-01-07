@@ -27,6 +27,10 @@ void AcquisitionController::setInterval(int ms){
         m_timer.start(m_intervalMs);
 }
 
+std::vector<Measurement> AcquisitionController::getLastMeasurements(int count){
+    return m_db.getLastMeasurements(count);
+}
+
 void AcquisitionController::onTimeout(){
     auto measurements = m_manager.readAll();
 

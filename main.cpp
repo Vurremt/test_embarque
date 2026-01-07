@@ -1,5 +1,7 @@
-#include <QCoreApplication>
+#include <QApplication>
 #include <QDebug>
+
+#include "ui/mainwindow.h"
 
 #include "core/AcquisitionController.h"
 #include "core/TemperatureSensor.h"
@@ -7,22 +9,14 @@
 
 int main(int argc, char *argv[])
 {
-    QCoreApplication app(argc, argv);
+    QApplication app(argc, argv);
 
-    AcquisitionController acquisitionController;
-    acquisitionController.addSensor(std::make_unique<TemperatureSensor>());
-    acquisitionController.addSensor(std::make_unique<HumiditySensor>());
+    AcquisitionController controller;
+    controller.addSensor(std::make_unique<TemperatureSensor>());
+    controller.addSensor(std::make_unique<HumiditySensor>());
 
-    QObject::connect(&acquisitionController, &AcquisitionController::measurementsReady,
-                    [](const std::vector<Measurement>& measurements){
-                        qDebug() << "New measurements stored in DB:";
-                        for (const auto& m : measurements) {
-                            qDebug() << QString::fromStdString(m.sensorName) << m.value;
-                        }
-                    }
-    );
-
-    acquisitionController.start();
+    MainWindow mainWindow(&controller);
+    mainWindow.show();
 
     return app.exec();
 }

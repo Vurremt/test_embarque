@@ -2,22 +2,40 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QTableWidget>
+#include <QPushButton>
+#include <QLabel>
 
-QT_BEGIN_NAMESPACE
-namespace Ui {
-class MainWindow;
-}
-QT_END_NAMESPACE
+#include "AcquisitionController.h"
 
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
 
 public:
-    MainWindow(QWidget *parent = nullptr);
-    ~MainWindow();
+    MainWindow(AcquisitionController* controller, QWidget *parent = nullptr);
+    ~MainWindow() = default;
+
+    void setupUi();
+    void updateLiveValues(const std::vector<Measurement>& m);
+    void refreshHistory();
+
+private slots:
+    void onMeasurements(const std::vector<Measurement>& m);
+    void onStartStop();
+    void onSyncNow();
 
 private:
-    Ui::MainWindow *ui;
+    AcquisitionController* m_controller;
+
+    QTableWidget* m_liveTable;
+    QTableWidget* m_historyTable;
+
+    QPushButton* m_startStopBtn;
+    QPushButton* m_syncBtn;
+
+    QLabel* m_statusLabel;
+
+    bool m_running = false;
 };
 #endif // MAINWINDOW_H

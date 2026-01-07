@@ -21,6 +21,7 @@ public:
     void start();
     void stop();
     void setInterval(int ms);
+    std::vector<Measurement> getLastMeasurements(int count);
 
 signals:
     void measurementsReady(const std::vector<Measurement>& measurements);
