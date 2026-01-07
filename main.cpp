@@ -15,8 +15,8 @@ int main(int argc, char *argv[])
 
     QObject::connect(&acquisitionController, &AcquisitionController::measurementsReady,
                     [](const std::vector<Measurement>& measurements){
-                        qDebug() << "New measurements:";
-                        for(const auto& m : measurements){
+                        qDebug() << "New measurements stored in DB:";
+                        for (const auto& m : measurements) {
                             qDebug() << QString::fromStdString(m.sensorName) << m.value;
                         }
                     }

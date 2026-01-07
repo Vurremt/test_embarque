@@ -1,8 +1,11 @@
 #include "AcquisitionController.h"
 
 AcquisitionController::AcquisitionController(QObject *parent)
-    : QObject{parent}
+    : QObject{parent}, m_db("data.db")
 {
+    m_db.open();
+    m_db.init();
+
     QObject::connect(&m_timer, &QTimer::timeout, this, &AcquisitionController::onTimeout);
 }
 
@@ -11,7 +14,7 @@ void AcquisitionController::addSensor(std::unique_ptr<ISensor> sensor){
 }
 
 void AcquisitionController::start(){
-    m_timer.start();
+    m_timer.start(m_intervalMs);
 }
 
 void AcquisitionController::stop(){
@@ -26,5 +29,10 @@ void AcquisitionController::setInterval(int ms){
 
 void AcquisitionController::onTimeout(){
     auto measurements = m_manager.readAll();
+
+    for(const auto& m : measurements){
+        m_db.insertMeasurement(m);
+    }
+
     emit measurementsReady(measurements);
 }

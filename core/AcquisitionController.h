@@ -9,6 +9,7 @@
 
 #include "SensorManager.h"
 #include "Measurement.h"
+#include "DatabaseManager.h"
 
 class AcquisitionController : public QObject
 {
@@ -31,6 +32,8 @@ private:
     SensorManager m_manager;
     QTimer m_timer;
     int m_intervalMs = 1000;
+
+    DatabaseManager m_db;
 };
 
 #endif // ACQUISITIONCONTROLLER_H

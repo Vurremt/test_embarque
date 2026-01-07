@@ -9,8 +9,8 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets)
-find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets)
+find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets Sql)
+find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets Sql)
 
 set(APP_FILES
     main.cpp
@@ -33,6 +33,10 @@ set(CORE_FILES
     core/SensorManager.cpp
     core/SensorManager.h
     core/Measurement.h
+    core/DatabaseManager.cpp
+    core/DatabaseManager.h
+    core/AcquisitionController.cpp
+    core/AcquisitionController.h
 )
 
 set(PROJECT_SOURCES
@@ -52,6 +56,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         core/Measurement.h
         core/SensorManager.h core/SensorManager.cpp
         core/AcquisitionController.h core/AcquisitionController.cpp
+        core/DatabaseManager.h core/DatabaseManager.cpp
     )
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET test_embarque APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR
@@ -73,7 +78,10 @@ endif()
 
 target_include_directories(test_embarque PRIVATE core ui)
 
-target_link_libraries(test_embarque PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
+target_link_libraries(test_embarque PRIVATE
+  Qt${QT_VERSION_MAJOR}::Widgets
+  Qt${QT_VERSION_MAJOR}::Sql
+)
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
 # If you are developing for iOS or macOS you should consider setting an
